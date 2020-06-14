@@ -11,6 +11,7 @@ public class Server
 {
     private int port;
     private ServerSocket serverSocket;
+    
     private static ArrayList<String> brKarte = new ArrayList<String>();
     private static ArrayList<String> imeIprezime = new ArrayList<String>();
     private static ArrayList<String> datumPolaska = new ArrayList<String>();
@@ -107,12 +108,12 @@ public class Server
     	
         PrintStream ps = new PrintStream(os);
 
-    //    String splited[] = resource.split("\\?");
-	//    String naredba = splited[0];
-        resource = resource.replace('/', File.separatorChar);
+        String splited[] = resource.split("\\?");
+	    String naredba = splited[0];
+  //      resource = resource.replace('/', File.separatorChar);
 	    
 
-	    if(resource.equals("Dodaj"))
+	    if(naredba.equals("dodaj"))
 	    {
 	    	ps.print("HTTP/1.0 200 OK\r\n"
 		               + "Content-type: text/html; charset=UTF-8\r\n\r\n");
@@ -139,17 +140,77 @@ public class Server
 		    		cena.add(parametri.get(key));
 		    	}
 		    }
-        
-	    }
 	    
 	    ps.print("<h1 style=\"color:blue;\">HTTP.Pregled voznih karata</h1>");
         
         ps.print("<form action=\"izmeniid\">");
     	ps.print("<table border=\"1\">");
     	
-    	ps.print("<tr><th>#</th><th>Klub</th><th>Bodovi</th><th>Akcije</th></tr>");
-	    
-	    
+    	ps.print("<tr><th>#</th><th>Broj karte</th><th>Ime i prezime putnika</th><th>Datum polaska</th><th>Polaziste</th><th>Destinacija</th><th>Cena[RSD]</th><th></th></tr>");
+
+    	for(int i=0; i<brKarte.size(); i++)
+    	{	    	
+    		 ps.print("<tr><td>");
+    		 ps.print(i+1 + "</td>");
+    		 ps.print("<td>");    		 
+    		 ps.print(brKarte.get(i));
+    		 ps.print("</td>");
+    		 ps.print("<td>");    		 
+    		 ps.print(imeIprezime.get(i));
+    		 ps.print("</td>");
+    		 ps.print("<td>");
+    		 ps.print(datumPolaska.get(i));
+    		 ps.print("</td>");
+    		 ps.print("<td>");
+    		 ps.print(polaziste.get(i));
+    		 ps.print("</td>");
+    		 ps.print("<td>");
+    		 ps.print(destinacija.get(i));
+    		 ps.print("</td>");
+    		 ps.print("<td>");
+    		 ps.print(cena.get(i));
+    		 ps.print("</td>");
+    		 ps.print("<td>");
+    		 ps.print("<input type=\"submit\" name=\"" + i + "\" value=\"Otkazi\" />\r\n" + 
+    		 		"	</td>");
+    	 }	    	 
+    	 ps.print("</table>");  
+    	 ps.print("</form>");
+    	 
+    	 ps.print("<a href=\"kupiponovo\">Kupi novu voznu kartu</a><br/>");
+	 }
+    	 
+    	 else if(naredba.equals("kupiponovo"))
+ 	    {
+ 	    	 ps.print("HTTP/1.0 200 OK\r\n"
+ 	                 + "Content-type: text/html; charset=UTF-8\r\n\r\n");
+ 	    	 ps.print("<h1 style=\"color:green;\">Kupovina nove karte</h1>\r\n" + 
+ 	    	  		"	<form action=\"dodaj\">\r\n" + 
+ 	    	  		"		<table>\r\n" + 
+ 	    	  		"			<tr>\r\n" + 
+ 	    	  		"				<td> <h4>Broj karte(id): <h4> </td>\r\n" + 
+ 	    	  		"	<td>	<input type=\"text\" name=\"brojKarte\" /> </td>\r\n" + 
+	    	  		"			</tr>	\r\n" + 
+ 	    	  		"				<td> <h4>Ime i prezime putnika: <h4> </td>\r\n" + 
+ 	    	  		"	<td>	<input type=\"text\" name=\"imePrz\" /> </td> \r\n" + 
+	    	  		"			</tr>	\r\n" + 
+ 	    	  		"				<td> <h4>Datum polaska: <h4> </td>\r\n" + 
+ 	    	  		"	<td>	<input type=\"text\" name=\"datumPolaska\" /> </td> \r\n" + 
+	    	  		"			</tr>	\r\n" + 
+ 	    	  		"				<td> <h4>Polaziste: <h4> </td>\r\n" + 
+ 	    	  		"	<td>	<input type=\"text\" name=\"polaziste\" /> </td> \r\n" + 
+	    	  		"			</tr>	\r\n" + 
+ 	    	  		"				<td> <h4>Destinacija: <h4> </td>\r\n" + 
+ 	    	  		"	<td>	<input type=\"text\" name=\"destinacija\" /> </td> \r\n" + 
+	    	  		"			</tr>	\r\n" + 
+ 	    	  		"				<td> <h4>Cena: <h4> </td>\r\n" + 
+ 	    	  		"	<td>	<input type=\"text\" name=\"cena\" /> </td> \r\n" + 
+	    	  		"			</tr>	\r\n" + 
+ 	    	  		"		</table>\r\n" + 
+	    	  		"	 HTTP:  <input type=\"submit\" value=\"Dodaj\" />\r\n" + 
+ 	    	  		"	</form>");
+ 	    }
+	   
         ps.flush();
       
     }

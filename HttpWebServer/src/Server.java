@@ -6,6 +6,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+import java.util.Map.Entry;
+
+
 
 public class Server
 {
@@ -143,7 +146,7 @@ public class Server
 	    
 	    ps.print("<h1 style=\"color:blue;\">HTTP.Pregled voznih karata</h1>");
         
-        ps.print("<form action=\"izmeniid\">");
+        ps.print("<form action=\"otkazi\">");
     	ps.print("<table border=\"1\">");
     	
     	ps.print("<tr><th>#</th><th>Broj karte</th><th>Ime i prezime putnika</th><th>Datum polaska</th><th>Polaziste</th><th>Destinacija</th><th>Cena[RSD]</th><th></th></tr>");
@@ -210,9 +213,76 @@ public class Server
 	    	  		"	 HTTP:  <input type=\"submit\" value=\"Dodaj\" />\r\n" + 
  	    	  		"	</form>");
  	    }
-	   
-        ps.flush();
-      
+	    
+    	 else if(naredba.equals("otkazi"))
+ 	    {	
+ 	
+    		 ps.print("HTTP/1.0 200 OK\r\n"
+  	               + "Content-type: text/html; charset=UTF-8\r\n\r\n");
+  	        HashMap<String,String> parametri = getParameter(resource);
+
+  	        int index = 0;
+  	        for (Entry<String, String> entry : parametri.entrySet()) {
+  	            String key = entry.getKey();
+  	            String value = entry.getValue();
+  	            if(value.equals(""))	            		
+  	            {
+  	            	index = Integer.parseInt(key);
+  	            	break;
+  	            }	            
+  	        }
+  	        
+  	        for (String key : parametri.keySet()) 
+  	        {
+  	            if(key.equals("naziv"))
+  	            {
+  	            	brKarte.remove(index);
+  	            }
+  	    /*        else if(key.equals("grad"))
+  	            {
+  	            	gradovi.set(index, Integer.parseInt(parametri.get(key)));
+  	            }
+  */		        }
+  	                	        
+  	          
+  	        ps.print("<form action=\"otkazi\">");
+  	    	ps.print("<table border=\"1\">");
+  	    	
+  	    	ps.print("<tr><th>#</th><th>Broj karte</th><th>Ime i prezime putnika</th><th>Datum polaska</th><th>Polaziste</th><th>Destinacija</th><th>Cena[RSD]</th><th></th></tr>");
+  	    	for(int i=0; i<brKarte.size(); i++)
+  	    	{	    		 
+  	    		 ps.print("<tr><td>");
+  	    		 ps.print(i+1 + "</td>");
+  	    		 ps.print("<td>");    		 
+  	    		 ps.print(brKarte.get(i));
+  	    		 ps.print("</td>");
+  	    		 ps.print("<td>");    		 
+  	    		 ps.print(imeIprezime.get(i));
+  	    		 ps.print("</td>");
+  	    		 ps.print("<td>");
+  	    		 ps.print(datumPolaska.get(i));
+  	    		 ps.print("</td>");
+  	    		 ps.print("<td>");
+  	    		 ps.print(polaziste.get(i));
+  	    		 ps.print("</td>");
+  	    		 ps.print("<td>");
+  	    		 ps.print(destinacija.get(i));
+  	    		 ps.print("</td>");
+  	    		 ps.print("<td>");
+  	    		 ps.print(cena.get(i));
+  	    		 ps.print("</td>");
+  	    		 ps.print("<td>");
+  	    		 ps.print("<input type=\"submit\" name=\"" + i + "\" value=\"Otkazi\" />\r\n" + 
+  	    		 		"	</td>");
+  	    	 }	    	 
+  	    	 ps.print("</table>");  
+  	    	 ps.print("</form>");
+  	        
+  	        ps.print("<a href=\"dodajopet\">Kupi novu voznu kartu</a><br/>");
+   	        	          
+ 	    }
+ 	    ps.flush();
+ 	    	
     }
    static HashMap<String, String> getParameter(String requestLine) {
 		HashMap<String, String> retVal = new HashMap<String, String>();
